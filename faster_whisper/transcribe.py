@@ -87,6 +87,11 @@ class WhisperModel:
         num_workers: int = 1,
         download_root: Optional[str] = None,
         local_files_only: bool = False,
+        feature_size=80,
+        sampling_rate=16000,
+        hop_length=160,
+        chunk_length=30,
+        n_fft=400,
     ):
         """Initializes the Whisper model.
 
@@ -142,7 +147,13 @@ class WhisperModel:
                 "openai/whisper-tiny" + ("" if self.model.is_multilingual else ".en")
             )
 
-        self.feature_extractor = FeatureExtractor()
+        self.feature_extractor = FeatureExtractor(
+            feature_size=feature_size,
+            sampling_rate=sampling_rate,
+            hop_length=hop_length,
+            chunk_length=chunk_length,
+            n_fft=n_fft,
+        )
         self.num_samples_per_token = self.feature_extractor.hop_length * 2
         self.frames_per_second = (
             self.feature_extractor.sampling_rate // self.feature_extractor.hop_length

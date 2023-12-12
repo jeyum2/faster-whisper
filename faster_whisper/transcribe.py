@@ -89,6 +89,7 @@ class WhisperModel:
         num_workers: int = 1,
         download_root: Optional[str] = None,
         local_files_only: bool = False,
+        feat_kwargs={},
     ):
         """Initializes the Whisper model.
 
@@ -144,7 +145,7 @@ class WhisperModel:
                 "openai/whisper-tiny" + ("" if self.model.is_multilingual else ".en")
             )
 
-        self.feat_kwargs = self._get_feature_kwargs(model_path)
+        self.feat_kwargs = {**self._get_feature_kwargs(model_path), **feat_kwargs}
         self.feature_extractor = FeatureExtractor(**self.feat_kwargs)
         self.num_samples_per_token = self.feature_extractor.hop_length * 2
         self.frames_per_second = (
